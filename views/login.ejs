@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo">
+        <span class="logo-mark">SW</span>
+        <span class="logo-text">Portfolio Hub</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="form-section">
+      <h1 class="form-title">관리자 로그인</h1>
+
+      <% if (error) { %>
+        <p style="color:#ff6b6b;"><%= error %></p>
+      <% } %>
+
+      <form action="/login" method="post" class="post-form">
+        <div class="form-group">
+          <label>관리자 비밀번호</label>
+          <input type="password" name="password" required placeholder="비밀번호 입력">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">관리자 로그인</button>
+        </div>
+      </form>
+
+      <hr style="margin: 20px 0; opacity: .2;">
+
+      <form action="/guest" method="post">
+        <p class="form-help">게스트 모드는 글을 읽기만 가능합니다.</p>
+        <button class="btn-ghost">게스트로 들어가기</button>
+      </form>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">© 2025 Sunwoong. All rights reserved.</div>
+  </footer>
+
+</body>
+</html>

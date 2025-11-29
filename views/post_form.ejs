@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- 공통 스타일 -->
+  <link rel="stylesheet" href="/public/css/style.css" />
+
+  <!-- Toast UI Editor -->
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+  <style>
+    .page {
+      min-height: calc(100vh - 64px - 56px);
+      display: flex;
+      justify-content: center;
+      padding: 48px 16px 40px;
+    }
+    .form-section {
+      max-width: 1500px;
+      width: 100%;
+    }
+    #editor {
+      height: 800px;
+      background: #05060a;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 상단바 -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo">
+        <span class="logo-mark">SW</span>
+        <span class="logo-text">Sunwoong Portfolio Hub</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="page">
+      <section class="form-section">
+
+        <!-- mode에 따라 제목 변경 -->
+        <h1 class="page-title">
+          <%= mode === 'edit' ? '포트폴리오 글 수정' : '포트폴리오 글 작성' %>
+        </h1>
+
+        <!-- mode에 따라 action 변경 -->
+        <form
+          id="postForm"
+          method="POST"
+          action="<%= mode === 'edit' ? '/admin/edit/' + post.id : '/admin/write' %>"
+        >
+
+          <!-- 제목 -->
+          <div class="form-group">
+            <label class="form-label" for="title">제목</label>
+            <input
+              class="form-input"
+              type="text"
+              id="title"
+              name="title"
+              required
+              value="<%= post.title || '' %>"
+            />
+          </div>
+
+          <!-- 요약 -->
+          <div class="form-group">
+            <label class="form-label" for="summary">요약</label>
+            <textarea
+              class="form-textarea"
+              id="summary"
+              name="summary"
+              rows="3"
+            ><%= post.summary || '' %></textarea>
+          </div>
+
+          <!-- 링크 -->
+          <div class="form-group">
+            <label class="form-label" for="link_url">포트폴리오 링크</label>
+            <input
+              class="form-input"
+              type="url"
+              id="link_url"
+              name="link_url"
+              placeholder="https://example.com"
+              value="<%= post.link_url || '' %>"
+            />
+          </div>
+
+          <!-- 상세 설명 -->
+          <div class="form-group">
+            <label class="form-label">상세 설명</label>
+
+            <!-- 에디터 -->
+            <div id="editor"></div>
+
+            <!-- 서버로 보낼 hidden textarea (HTML 저장용) -->
+            <textarea id="content" name="content" style="display:none;"><%- post.content || '' %></textarea>
+          </div>
+
+          <!-- 버튼 -->
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">
+              <%= mode === 'edit' ? '수정 완료' : '등록하기' %>
+            </button>
+            <a href="/" class="btn-ghost">취소</a>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© <%= new Date().getFullYear() %> Sunwoong. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- Toast UI Editor 초기화 -->
+  <script>
+    const Editor = toastui.Editor;
+
+    // 숨겨진 textarea의 기존 내용(수정 모드일 때 들어있음)
+    const hiddenContent = document.getElementById('content');
+    const initialContent = hiddenContent.value;
+
+    const editor = new Editor({
+      el: document.querySelector('#editor'),
+      height: '1000px',
+      initialEditType: 'wysiwyg',
+      previewStyle: 'vertical',
+
+      // **수정 모드면 기존 내용 자동 로딩됨**
+      initialValue: initialContent,
+
+      hideModeSwitch: true,
+      hooks: {
+        addImageBlobHook: async (blob, callback) => {
+          try {
+            const formData = new FormData();
+            formData.append('image', blob);
+
+            const res = await fetch('/upload-image', {
+              method: 'POST',
+              body: formData
+            });
+
+            const data = await res.json();
+            callback(data.url, 'image');
+          } catch (err) {
+            console.error('이미지 업로드 실패:', err);
+            alert('이미지 업로드 실패');
+          }
+        }
+      }
+    });
+
+    // 제출 시 에디터 내용을 hidden textarea로 옮기기
+    document.getElementById('postForm').addEventListener('submit', () => {
+      hiddenContent.value = editor.getHTML();
+    });
+  </script>
+</body>
+</html>

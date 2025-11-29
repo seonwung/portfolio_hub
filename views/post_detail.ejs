@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/public/css/style.css" />
+</head>
+<body>
+
+  <!-- 상단바 -->
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <div class="logo">
+        <span class="logo-mark">SW</span>
+        <span class="logo-text">Sunwoong Portfolio Hub</span>
+      </div>
+
+      <!-- 🔥 관리자 로그인 / 로그아웃 버튼 -->
+      <div class="auth-area">
+        <% if (isAdmin) { %>
+          <form action="/logout" method="post" class="auth-form">
+            <button class="btn-secondary">로그아웃</button>
+          </form>
+        <% } else { %>
+          <a href="/login" class="btn-secondary">관리자 로그인</a>
+        <% } %>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="post-detail">
+
+      <!-- ============================
+           상단 프로젝트 헤더 카드
+      ============================ -->
+      <div class="post-header-card">
+        <div>
+          <h1 class="post-title"><%= post.title %></h1>
+          <p class="post-date"><%= post.created_at.toLocaleString() %></p>
+        </div>
+
+        <% if (post.link_url) { %>
+          <a class="post-open-btn" href="<%= post.link_url %>" target="_blank">
+            🚀 프로젝트 열기
+          </a>
+        <% } %>
+      </div>
+
+      <!-- ============================
+            본문 큰 박스 (디시 스타일)
+      ============================ -->
+      <div class="post-content-box">
+        <div class="post-content">
+          <%- post.content %>
+        </div>
+      </div>
+
+      <!-- 액션 버튼 -->
+      <div class="post-actions">
+
+        <!-- 🔥 관리자만 수정/삭제 -->
+        <% if (isAdmin) { %>
+
+          <a href="/admin/edit/<%= post.id %>" class="btn-secondary">수정</a>
+
+          <form action="/admin/delete/<%= post.id %>" method="post" style="display:inline;">
+            <button class="btn-danger" onclick="return confirm('삭제할까요?')">
+              삭제
+            </button>
+          </form>
+
+        <% } %>
+
+        <a href="/" class="btn-ghost">목록으로</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      © 2025 Sunwoong. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>

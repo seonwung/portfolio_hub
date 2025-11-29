@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/public/css/style.css" />
+</head>
+<body>
+ <header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <span class="logo-mark">SW</span>
+      <span class="logo-text">Sunwoong Portfolio Hub</span>
+    </div>
+  </div>
+  </header>
+
+  <main class="main">
+    <%- body %>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© <%= new Date().getFullYear() %> Sunwoong. All rights reserved.</span>
+    </div>
+  </footer>
+</body>
+</html>

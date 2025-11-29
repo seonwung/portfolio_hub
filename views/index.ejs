@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/public/css/style.css" />
+</head>
+<body>
+
+  <!-- 상단바 -->
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <div class="logo">
+        <span class="logo-mark">SW</span>
+        <span class="logo-text">Sunwoong Portfolio Hub</span>
+      </div>
+
+      <!-- 🔥 관리자 로그인 / 로그아웃 버튼 -->
+      <div class="auth-area">
+        <% if (isAdmin) { %>
+          <form action="/logout" method="post" class="auth-form">
+            <button class="btn-secondary">로그아웃</button>
+          </form>
+        <% } else { %>
+          <a href="/login" class="btn-secondary">관리자 로그인</a>
+        <% } %>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- 메인 -->
+  <main class="main">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-kicker">Portfolio Board</p>
+        <h1 class="hero-title">선웅이 포트폴리오 허브</h1>
+        <p class="hero-subtitle">
+          내가 만든 프로젝트들을 포트폴리오 글 형태로 정리하고, 각 글에 실제 링크를 연결해서 관리하는 허브입니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 목록 + 포트폴리오 추가 버튼 -->
+    <section class="projects-section">
+
+      <div class="projects-header">
+
+        <div class="projects-header-text">
+          <h2 class="section-title">포트폴리오 목록</h2>
+          <p class="section-subtitle">
+            내가 만든 포트폴리오를 카드 형태로 정리하고, 각 글에 실제 링크를 연결해서 관리합니다.
+          </p>
+        </div>
+
+        <!-- 🔥 관리자만 보임 -->
+        <% if (isAdmin) { %>
+          <a href="/admin/write" class="btn-primary projects-add-btn">
+            + 포트폴리오 추가
+          </a>
+        <% } %>
+
+      </div>
+
+      <div class="projects-grid">
+        <% if (posts && posts.length > 0) { %>
+
+          <% posts.forEach(function (post) { %>
+            <article class="project-card">
+
+              <div class="project-tag"># <%= post.id %></div>
+
+              <h3 class="project-name">
+                <a href="/post/<%= post.id %>" class="project-title-link">
+                  <%= post.title %>
+                </a>
+              </h3>
+
+              <% if (post.summary) { %>
+                <p class="project-desc"><%= post.summary %></p>
+              <% } %>
+
+              <% if (post.link_url) { %>
+                <p class="project-link-preview">
+                  링크: <span><%= post.link_url %></span>
+                </p>
+              <% } %>
+
+              <div class="project-footer">
+                <a href="/post/<%= post.id %>" class="project-link">
+                  글 자세히 보기 →
+                </a>
+              </div>
+
+            </article>
+          <% }); %>
+
+        <% } else { %>
+          <p class="empty-text">
+            등록된 포트폴리오 글이 아직 없습니다.
+            <% if (isAdmin) { %>
+              오른쪽의 “포트폴리오 추가” 버튼을 눌러 첫 글을 작성해보세요.
+            <% } %>
+          </p>
+        <% } %>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© 2025 Sunwoong. All rights reserved.</span>
+    </div>
+  </footer>
+
+</body>
+</html>
